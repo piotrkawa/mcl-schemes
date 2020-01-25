@@ -3,6 +3,7 @@ const assert = require("assert");
 
 const SchnorrIdentificationScheme = require("./schemes/sis");
 const OkamotoIdentificationScheme = require("./schemes/ois");
+const ModifiedSchnorrIdentificationScheme = require("./schemes/msis");
 
 const { generatePrivateAndPublicKeys } = require("./cryptography/keyGeneration.js")
 const { CONFIG } = require("./config");
@@ -10,8 +11,9 @@ const operations = require("./cryptography/operations");
 
 async function run() {
   await mcl.init(mcl.BLS12_381);
-  assert(testSIS());
-  assert(testOIS());
+  // assert(testSIS());
+  // assert(testOIS());
+  assert(testMSIS());
 }
 
 function testSIS() {
@@ -19,7 +21,7 @@ function testSIS() {
     generator1: CONFIG.CONST_G1
   };
 
-  const { privateKey, publicKey } = generatePrivateAndPublicKeys({generator: parameters.generator1 });
+  const { privateKey, publicKey } = generatePrivateAndPublicKeys({ generator: parameters.generator1 });
   const SIS = new SchnorrIdentificationScheme(parameters);
 
   const { X, x } = SIS.generateCommitment();
@@ -65,6 +67,27 @@ function testOIS() {
   return isVerified;
 }
 
+function testMSIS() {
+  const parameters = {
+    generator1: CONFIG.CONST_G1
+  };
+  const { privateKey, publicKey } = generatePrivateAndPublicKeys({ generator: parameters.generator1 });
+  const MSIS = new ModifiedSchnorrIdentificationScheme(parameters);
+
+  const { X, x } = MSIS.generateCommitment();
+  const c = MSIS.generateChallenge();
+
+  // Prove
+  const commitment = { X, x };
+  const s = MSIS.prove(commitment, privateKey, c);
+
+
+  // Verify
+  const transcript = { X, c, s };
+  const isVerified = MSIS.verify(publicKey, transcript);
+
+  return isVerified;
+}
 
 
 run();

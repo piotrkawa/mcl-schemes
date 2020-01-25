@@ -40,11 +40,20 @@ function getRandomScalar() {
     return r;
 }
 
+function pairing(x, y) {
+    return mcl.pairing(x, y);
+}
+
+function hashAndMapToG2(value) {
+    return mcl.hashAndMapToG2(value);
+}
 
 module.exports = {
     mul,
     generateG1,
     generateG2,
     getRandomScalar,
-    add
+    add, 
+    pairing,
+    hashAndMapToG2
 }
