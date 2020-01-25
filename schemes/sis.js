@@ -1,38 +1,35 @@
-const mcl = require("mcl-wasm");
-const { mul, generateG1, getRandomScalar } = require("../cryptography/operations"); 
-const { CONFIG } = require("../config");
+const { mul, add, generateG1, getRandomScalar } = require("../cryptography/operations.js");
 
-// async function SIS() {
-//     X, A, c, s = prove();
-//     return verify(A,X,c,s);
-// }
+class SchnorrIdentificationScheme {
 
-async function verify(A, X, c, s) {
-    return g^ s === XA^c
-}
+  constructor(parameters) {
+    const { generatorG1 } = parameters;
+    this.g = generateG1(`${generatorG1.x} ${generatorG1.y}`);
+  }
 
-async function prove() {
-    X, x = generateCommitment();
-    challenge = generateChallenge();
-    return generateResponse
-}
+  generateCommitment() {
+    const x = getRandomScalar();
+    const X = mul(this.g, x);
+    return { X, x };
+  }
 
-async function generateCommitment() {
-    const g = await generateG1(`${CONFIG.CONST_G1.x} ${CONFIG.CONST_G1.y}`);
-    const x = await getRandomScalar();
-    const X = await mul(g, x);
-    return {X, x};
-}
-
-async function generateChallenge() {
-    const c = await getRandomScalar();
+  generateChallenge() {
+    const c = getRandomScalar();
     return c;
-}
+  }
 
-async function generateResponse(x, a, c) {
-    const ac = await mul(a, c);
-    const s = await add(ac, x);    
+  prove(x, a, c) {
+    const ac = mul(a, c);
+    const s = add(ac, x);
     return s;
+  }
+
+  verify(A, X, c, s) {
+    const leftSide = mul(this.g, s);
+    const rightSide = add(X, mul(A, c));
+    return leftSide.getStr() === rightSide.getStr();
+  }
 }
 
-module.exports = { generateCommitment, generateChallenge, generateResponse }
+module.exports = SchnorrIdentificationScheme
+

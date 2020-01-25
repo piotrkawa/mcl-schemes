@@ -1,9 +1,10 @@
-const { getRandomScalar, mul } = require("./operations.js");
+const { getRandomScalar, generateG1, mul } = require("./operations.js");
+const { CONFIG } = require("../config");
 
-function generatePrivateAndPublicKey() {
+function generatePrivateAndPublicKeys() {
   const privateKey = generatePrivateKey();
   const publicKey = generatePublicKey(privateKey);
-  return privateKey, publicKey;
+  return { privateKey, publicKey };
 }
 
 function generatePrivateKey() {
@@ -11,8 +12,12 @@ function generatePrivateKey() {
 }
 
 function generatePublicKey(privateKey) {
-  const randomValue = getRandomScalar();
-  return mul(privateKey, randomValue);
+  const g = generateG1(`${CONFIG.CONST_G1.x} ${CONFIG.CONST_G1.y}`);
+  return mul(g, privateKey);
 }
 
-module.exports = { generatePrivateAndPublicKey, generatePrivateKey, generatePublicKey }
+module.exports = {
+  generatePrivateAndPublicKeys,
+  generatePrivateKey,
+  generatePublicKey
+}

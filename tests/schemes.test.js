@@ -1,13 +1,18 @@
 const mcl = require("mcl-wasm");
+const operations = require("../cryptography/operations");
+const SIS = require("../schemes/sis");
+const { generatePrivateAndPublicKeys } = require("../cryptography/keyGeneration.js")
 
-const SIS = require("../schemes/sis.js");
 
 beforeAll(async () => {
-
 });
 
-test('Adding 1 + 1 equals 2', async () => {
-  // const { X, x } = await SIS.generateCommitment();
-  // const c = await SIS.generateChallenge();
-  expect(true).toBe(true)
+test('Performing correct identification', async () => {
+  await mcl.init(mcl.BLS12_381);
+  const { privateKey, publicKey } = generatePrivateAndPublicKeys();
+  const { X, x } = SIS.generateCommitment();
+  const c = SIS.generateChallenge();
+  const proof = SIS.prove(x, privateKey, c);
+  const isVerified = SIS.verify(publicKey, X, c, proof);
+  expect(isVerified).toBe(true)
 })
