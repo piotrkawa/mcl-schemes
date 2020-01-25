@@ -4,6 +4,7 @@ const assert = require("assert");
 const SchnorrIdentificationScheme = require("./schemes/sis");
 const OkamotoIdentificationScheme = require("./schemes/ois");
 const ModifiedSchnorrIdentificationScheme = require("./schemes/msis");
+const SchnorrSignatureScheme = require("./schemes/sss");
 
 const { generatePrivateAndPublicKeys } = require("./cryptography/keyGeneration.js")
 const { CONFIG } = require("./config");
@@ -11,10 +12,32 @@ const operations = require("./cryptography/operations");
 
 async function run() {
   await mcl.init(mcl.BLS12_381);
+
+  testSSS();
   // assert(testSIS());
   // assert(testOIS());
-  assert(testMSIS());
+  // assert(testMSIS());
 }
+
+function testSSS() {
+  const parameters = {
+    generator1: CONFIG.CONST_G1
+  };
+
+  const { privateKey, publicKey } = generatePrivateAndPublicKeys({ generator: parameters.generator1 });
+  const SSS = new SchnorrSignatureScheme(parameters);
+
+  const message = "123";
+  const sigma = SSS.generateSignature(message, privateKey);
+
+  const isVerified = SSS.verifySignature(message, publicKey, sigma);
+
+  console.log(isVerified);
+
+
+
+}
+
 
 function testSIS() {
   const parameters = {

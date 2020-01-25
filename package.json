@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "crypto": "^1.0.1",
     "jest": "^25.1.0",
     "mcl-wasm": "^0.3.7",
     "node": "^13.6.0"

@@ -1,4 +1,7 @@
 const mcl = require("mcl-wasm");
+const crypto = require("crypto");
+const {CONFIG} = require("../config");
+
 
 function add(g, x) {
     return mcl.add(g, x);
@@ -28,12 +31,6 @@ function generateG2(pointString) {
     return point;
 }
 
-function generateFr(scalarString) {
-    const scalar = new mcl.Fr();
-    scalar.setStr(scalarString);
-    return scalar;
-}
-
 function getRandomScalar() {
     let r = new mcl.Fr();
     r.setByCSPRNG();
@@ -48,6 +45,21 @@ function hashAndMapToG2(value) {
     return mcl.hashAndMapToG2(value);
 }
 
+function getHashOfValue(value, format='hex') {
+    const hash = crypto.createHash('sha3-512');
+    const digestedHash = hash.update(value).digest(format);
+    const q = BigInt(CONFIG.r);
+    const hashInt = BigInt('0x' + digestedHash);
+    return (hashInt % q).toString();
+}
+
+function generateFr(scalarString) {
+    const scalar = new mcl.Fr();
+    scalar.setStr(scalarString);
+    return scalar;
+}
+
+
 module.exports = {
     mul,
     generateG1,
@@ -55,5 +67,7 @@ module.exports = {
     getRandomScalar,
     add, 
     pairing,
-    hashAndMapToG2
+    hashAndMapToG2,
+    getHashOfValue,
+    generateFr
 }
