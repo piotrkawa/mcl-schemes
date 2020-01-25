@@ -4,8 +4,8 @@ const operations = require("../cryptography/operations.js");
 class SchnorrIdentificationScheme {
 
   constructor(parameters) {
-    const { generatorG1 } = parameters;
-    this.g = operations.generateG1(`${generatorG1.x} ${generatorG1.y}`);
+    const { generator1 } = parameters;
+    this.g = operations.generateG1(`${generator1.x} ${generator1.y}`);
   }
 
   generateCommitment() {
@@ -15,8 +15,7 @@ class SchnorrIdentificationScheme {
   }
 
   generateChallenge() {
-    const c = operations.getRandomScalar();
-    return c;
+    return operations.getRandomScalar();
   }
 
   prove(x, a, c) {

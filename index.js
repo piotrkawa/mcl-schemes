@@ -1,6 +1,7 @@
 const mcl = require('mcl-wasm');
+const assert = require("assert");
 
-// const SchnorrIdentificationScheme = require("./schemes/sis");
+const SchnorrIdentificationScheme = require("./schemes/sis");
 const OkamotoIdentificationScheme = require("./schemes/ois");
 
 const { generatePrivateAndPublicKeys } = require("./cryptography/keyGeneration.js")
@@ -9,23 +10,23 @@ const operations = require("./cryptography/operations");
 
 async function run() {
   await mcl.init(mcl.BLS12_381);
-  // testSIS()
-  testOIS()
+  assert(testSIS());
+  assert(testOIS());
 }
 
 function testSIS() {
   const parameters = {
-    generatorG1: CONFIG.CONST_G1
+    generator1: CONFIG.CONST_G1
   };
 
-  const { privateKey, publicKey } = generatePrivateAndPublicKeys(parameters);
+  const { privateKey, publicKey } = generatePrivateAndPublicKeys({generator: parameters.generator1 });
   const SIS = new SchnorrIdentificationScheme(parameters);
 
   const { X, x } = SIS.generateCommitment();
   const c = SIS.generateChallenge();
   const proof = SIS.prove(x, privateKey, c);
   const isVerified = SIS.verify(publicKey, X, c, proof);
-  console.log(isVerified);
+  return isVerified;
 }
 
 
@@ -60,8 +61,8 @@ function testOIS() {
   // Verify
   const transcript = { X, c, s1, s2 };
   const isVerified = OIS.verify(A, transcript);
-  console.log(isVerified);
 
+  return isVerified;
 }
 
 
