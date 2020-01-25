@@ -1,22 +1,26 @@
-const operations = require("./cryptography/operations");
-const SchnorrIdentificationScheme = require("./schemes/sis");
 const mcl = require('mcl-wasm');
+
+// const SchnorrIdentificationScheme = require("./schemes/sis");
+const OkamotoIdentificationScheme = require("./schemes/ois");
+
 const { generatePrivateAndPublicKeys } = require("./cryptography/keyGeneration.js")
 const { CONFIG } = require("./config");
+const operations = require("./cryptography/operations");
 
 async function run() {
   await mcl.init(mcl.BLS12_381);
-  testSIS()
+  // testSIS()
+  testOIS()
 }
 
 function testSIS() {
-  const parameters = { 
-    generatorG1: CONFIG.CONST_G1 
+  const parameters = {
+    generatorG1: CONFIG.CONST_G1
   };
 
+  const { privateKey, publicKey } = generatePrivateAndPublicKeys(parameters);
   const SIS = new SchnorrIdentificationScheme(parameters);
 
-  const { privateKey, publicKey } = generatePrivateAndPublicKeys();
   const { X, x } = SIS.generateCommitment();
   const c = SIS.generateChallenge();
   const proof = SIS.prove(x, privateKey, c);
@@ -24,5 +28,42 @@ function testSIS() {
   console.log(isVerified);
 }
 
-run();
 
+function testOIS() {
+  const parameters = {
+    generator1: CONFIG.CONST_G1,
+    generator2: CONFIG.CONST_G2,
+  };
+
+  const keysG1 = generatePrivateAndPublicKeys({ generator: parameters.generator1 });
+  const keysG2 = generatePrivateAndPublicKeys({ generator: parameters.generator2 });
+
+  const a1 = keysG1.privateKey;
+  const A1 = keysG1.publicKey;
+
+  const a2 = keysG2.privateKey;
+  const A2 = keysG2.publicKey;
+
+  const A = operations.add(A1, A2);
+
+
+  const OIS = new OkamotoIdentificationScheme(parameters);
+  const { X, x1, x2 } = OIS.generateCommitment();
+  const c = OIS.generateChallenge();
+
+  // Prove
+  const commitments = { x1, x2 };
+  const privateKeys = { a1, a2 };
+  const { s1, s2 } = OIS.prove(commitments, privateKeys, c);
+
+
+  // Verify
+  const transcript = { X, c, s1, s2 };
+  const isVerified = OIS.verify(A, transcript);
+  console.log(isVerified);
+
+}
+
+
+
+run();

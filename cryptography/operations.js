@@ -4,8 +4,8 @@ function add(g, x) {
     return mcl.add(g, x);
 }
 
-async function sub(g, x) {
-    return await mcl.sub(g, x);
+function sub(g, x) {
+    return mcl.sub(g, x);
 }
 
 function mul(g, x) {
@@ -44,6 +44,7 @@ function getRandomScalar() {
 module.exports = {
     mul,
     generateG1,
+    generateG2,
     getRandomScalar,
     add
 }

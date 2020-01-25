@@ -1,32 +1,33 @@
-const { mul, add, generateG1, getRandomScalar } = require("../cryptography/operations.js");
+const operations = require("../cryptography/operations.js");
+
 
 class SchnorrIdentificationScheme {
 
   constructor(parameters) {
     const { generatorG1 } = parameters;
-    this.g = generateG1(`${generatorG1.x} ${generatorG1.y}`);
+    this.g = operations.generateG1(`${generatorG1.x} ${generatorG1.y}`);
   }
 
   generateCommitment() {
-    const x = getRandomScalar();
-    const X = mul(this.g, x);
+    const x = operations.getRandomScalar();
+    const X = operations.mul(this.g, x);
     return { X, x };
   }
 
   generateChallenge() {
-    const c = getRandomScalar();
+    const c = operations.getRandomScalar();
     return c;
   }
 
   prove(x, a, c) {
-    const ac = mul(a, c);
-    const s = add(ac, x);
+    const ac = operations.mul(a, c);
+    const s = operations.add(ac, x);
     return s;
   }
 
   verify(A, X, c, s) {
-    const leftSide = mul(this.g, s);
-    const rightSide = add(X, mul(A, c));
+    const leftSide = operations.mul(this.g, s);
+    const rightSide = operations.add(X, operations.mul(A, c));
     return leftSide.getStr() === rightSide.getStr();
   }
 }
