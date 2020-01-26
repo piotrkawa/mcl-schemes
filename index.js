@@ -1,10 +1,12 @@
 const mcl = require('mcl-wasm');
 const assert = require("assert");
 
-const SchnorrIdentificationScheme = require("./schemes/sis");
-const OkamotoIdentificationScheme = require("./schemes/ois");
-const ModifiedSchnorrIdentificationScheme = require("./schemes/msis");
-const SchnorrSignatureScheme = require("./schemes/sss");
+const SchnorrIdentificationScheme = require("./schemes/identificationSchemes/SchnorrIdentificationScheme");
+const OkamotoIdentificationScheme = require("./schemes/identificationSchemes/OkamotoIdentificationScheme");
+const ModifiedSchnorrIdentificationScheme = require("./schemes/identificationSchemes/ModifiedSchnorrIdentificationScheme");
+const SchnorrSignatureScheme = require("./schemes/signatureSchemes/SchnorrSignatureScheme");
+
+const GohJareckiSignatureScheme = require("./schemes/signatureSchemes/GohJareckiSignatureScheme");
 
 const { generatePrivateAndPublicKeys } = require("./cryptography/keyGeneration.js")
 const { CONFIG } = require("./config");
@@ -13,10 +15,21 @@ const operations = require("./cryptography/operations");
 async function run() {
   await mcl.init(mcl.BLS12_381);
 
-  testSSS();
-  // assert(testSIS());
-  // assert(testOIS());
-  // assert(testMSIS());
+  assert(testSSS());
+  assert(testSIS());
+  assert(testOIS());
+  assert(testMSIS());
+  // assert(testGJSS());
+}
+
+function testGJSS() {
+  const parameters = {
+    generator1: CONFIG.CONST_G1
+  };
+
+
+  const GJSS = new GohJareckiSignatureScheme(parameters);
+
 }
 
 function testSSS() {
@@ -29,13 +42,8 @@ function testSSS() {
 
   const message = "123";
   const sigma = SSS.generateSignature(message, privateKey);
-
   const isVerified = SSS.verifySignature(message, publicKey, sigma);
-
-  console.log(isVerified);
-
-
-
+  return isVerified;
 }
 
 

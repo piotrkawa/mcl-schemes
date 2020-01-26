@@ -1,8 +1,10 @@
-const operations = require("../cryptography/operations.js");
+const operations = require("../../cryptography/operations.js");
+const IdentificationScheme = require("./IdentificationScheme");
 
-class OkamotoIdentificationScheme {
+class OkamotoIdentificationScheme extends IdentificationScheme {
 
   constructor(parameters) {
+    super();
     const { generator1, generator2 } = parameters;
     this.g1 = operations.generateG1(`${generator1.x} ${generator1.y}`);
     this.g2 = operations.generateG1(`${generator2.x} ${generator2.y}`);

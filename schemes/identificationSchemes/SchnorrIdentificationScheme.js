@@ -1,9 +1,10 @@
-const operations = require("../cryptography/operations.js");
+const operations = require("../../cryptography/operations");
+const IdentificationScheme = require("./IdentificationScheme");
 
-
-class SchnorrIdentificationScheme {
+class SchnorrIdentificationScheme extends IdentificationScheme {
 
   constructor(parameters) {
+    super();
     const { generator1 } = parameters;
     this.g = operations.generateG1(`${generator1.x} ${generator1.y}`);
   }

@@ -1,4 +1,4 @@
-const operations = require("../cryptography/operations.js");
+const operations = require("../../cryptography/operations.js");
 
 
 class ModifiedSchnorrIdentificationScheme {
