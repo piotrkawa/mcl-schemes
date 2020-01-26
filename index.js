@@ -19,7 +19,7 @@ async function run() {
   assert(testSIS());
   assert(testOIS());
   assert(testMSIS());
-  // assert(testGJSS());
+  assert(testGJSS());
 }
 
 function testGJSS() {
@@ -27,9 +27,14 @@ function testGJSS() {
     generator1: CONFIG.CONST_G1
   };
 
+  const keys = generatePrivateAndPublicKeys({ generator: parameters.generator1 });
 
   const GJSS = new GohJareckiSignatureScheme(parameters);
 
+  const message = "123";
+  const sigma = GJSS.generateSignature(message, keys);
+  const isVerified = GJSS.verifySignature(message, keys.publicKey, sigma);
+  return isVerified;
 }
 
 function testSSS() {
@@ -79,7 +84,6 @@ function testOIS() {
   const A2 = keysG2.publicKey;
 
   const A = operations.add(A1, A2);
-
 
   const OIS = new OkamotoIdentificationScheme(parameters);
   const { X, x1, x2 } = OIS.generateCommitment();

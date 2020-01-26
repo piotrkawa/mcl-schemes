@@ -41,6 +41,10 @@ function pairing(x, y) {
     return mcl.pairing(x, y);
 }
 
+function hashAndMapToG1(value) {
+    return mcl.hashAndMapToG1(value);
+}
+
 function hashAndMapToG2(value) {
     return mcl.hashAndMapToG2(value);
 }
@@ -69,5 +73,7 @@ module.exports = {
     pairing,
     hashAndMapToG2,
     getHashOfValue,
-    generateFr
+    generateFr,
+    hashAndMapToG1,
+    sub
 }
