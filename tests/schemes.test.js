@@ -1,18 +1,28 @@
+/**
+ * @jest-environment node
+ */
+
 const mcl = require("mcl-wasm");
 const operations = require("../cryptography/operations");
-const SIS = require("../schemes/sis");
+const SchnorrIdentificationScheme = require("../schemes/identificationSchemes/SchnorrIdentificationScheme");
 const { generatePrivateAndPublicKeys } = require("../cryptography/keyGeneration.js")
+const { CONFIG } = require("../config");
+const assert = require("assert");
 
-
-beforeAll(async () => {
-});
 
 test('Performing correct identification', async () => {
   await mcl.init(mcl.BLS12_381);
-  const { privateKey, publicKey } = generatePrivateAndPublicKeys();
+
+  const parameters = {
+    generator1: CONFIG.CONST_G1
+  };
+
+  const { privateKey, publicKey } = generatePrivateAndPublicKeys({ generator: parameters.generator1 });
+  const SIS = new SchnorrIdentificationScheme(parameters);
+
   const { X, x } = SIS.generateCommitment();
   const c = SIS.generateChallenge();
   const proof = SIS.prove(x, privateKey, c);
   const isVerified = SIS.verify(publicKey, X, c, proof);
-  expect(isVerified).toBe(true)
-})
+    assert(isVerified);
+});
