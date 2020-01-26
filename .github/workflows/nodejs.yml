@@ -24,5 +24,3 @@ jobs:
         npm test
       env:
         CI: true
-    - name: Run Jest
-      uses: stefanoeb/jest-action@1.0.2
