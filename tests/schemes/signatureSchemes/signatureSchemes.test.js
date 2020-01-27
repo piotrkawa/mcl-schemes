@@ -1,7 +1,3 @@
-/**
- * @jest-environment node
- */
-
 const mcl = require('mcl-wasm');
 const assert = require("assert");
 
