@@ -1,4 +1,3 @@
-const mcl = require("mcl-wasm");
 const assert = require("assert");
 
 const SchnorrIdentificationScheme = require("../../../schemes/identificationSchemes/SchnorrIdentificationScheme");
@@ -7,10 +6,11 @@ const OkamotoIdentificationScheme = require("../../../schemes/identificationSche
 const { generatePrivateAndPublicKeys } = require("../../../cryptography/keyGeneration.js")
 const { CONFIG } = require("../../../config");
 const operations = require("../../../cryptography/operations");
+const { initialize, Curves } = require("../../../init");
 
 
 beforeAll(async () => {
-  await mcl.init(mcl.BLS12_381);
+  await initialize(Curves.BLS12_381);
 });
 
 test('Performing correct Schnorr Identification Scheme', () => {

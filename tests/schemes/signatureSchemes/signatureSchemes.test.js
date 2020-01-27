@@ -1,15 +1,14 @@
-const mcl = require('mcl-wasm');
 const assert = require("assert");
 
 const SchnorrSignatureScheme = require("../../../schemes/signatureSchemes/SchnorrSignatureScheme");
 const GohJareckiSignatureScheme = require("../../../schemes/signatureSchemes/GohJareckiSignatureScheme");
 const { generatePrivateAndPublicKeys } = require("../../../cryptography/keyGeneration")
 const { CONFIG } = require("../../../config");
-
+const { initialize, Curves } = require("../../../init");
 
 
 beforeAll(async () => {
-  await mcl.init(mcl.BLS12_381);
+  await initialize(Curves.BLS12_381);
 });
 
 test('Performing correct Schnorr Signature Scheme', () => {
