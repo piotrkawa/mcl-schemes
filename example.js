@@ -1,34 +1,3 @@
-# mcl-schemes
-
-The following repository contains the following cryptographic schemes implemented in JavaScript using [mcl-wasm](https://github.com/herumi/mcl-wasm).
-
-## Currently supported schemes
-
-Identification Schemes:
-* Schnorr Identification Scheme
-* Modified Schnorr Identification Scheme
-* Okamoto Identification Scheme
-
-Signature Schemes:
-* Schnorr Signature Scheme
-* Goh Jarecki Signature Scheme
-
-## Currently supported curves
-* BLS12_381
-* BN_SNARK1
-* BN462
-* BN381_1
-* BN254
-
-## Tests
-Project contains unit tests written using `Jest` framework - to run them use `npm test` command.
-Tests are run in CI.
-
-
-## Example
-The example is located in `example.js` file in root directory.
-
-```javascript
 const { generatePrivateAndPublicKeys } = require("./cryptography/keyGeneration.js");
 const ModifiedSchnorrIdentificationScheme = require("./schemes/identificationSchemes/ModifiedSchnorrIdentificationScheme");
 const { initialize, Curves } = require("./init");
@@ -67,13 +36,3 @@ async function runMSIS() {
 }
 
 runMSIS()
-```
-
-## TODO:
-* Add more convenient imports
-* Publish on npm
-* Refactor
-* Implement more schemes including:
-  * Boneh-Lynn-Shacham Signature Scheme
-  * Naxos Authenticated Key Exchange
-  * Sigma Authenticated Key Exchange
