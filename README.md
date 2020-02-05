@@ -72,7 +72,6 @@ runMSIS()
 ## TODO:
 * Add more convenient imports
 * Publish on npm
-* Add support for multiple elliptic curves
 * Refactor
 * Implement more schemes including:
   * Boneh-Lynn-Shacham Signature Scheme
